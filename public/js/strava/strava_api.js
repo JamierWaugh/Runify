@@ -1,5 +1,5 @@
-import {skey} from "../../keys.js";
-import {convertUnix} from "./unix_converter.js";
+import {skey} from "../../../keys.js";
+import {convertUnix} from "../global/unix_converter.js";
 /* Calls in keys from file */
 /* Calls in convertUnix function */
 const auth_link = "https://www.strava.com/oauth/token"

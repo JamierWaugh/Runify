@@ -1,4 +1,4 @@
-import {lkey} from "../../keys.js";
+import {lkey} from "../../../keys.js";
 
 export function auth(){
     const body = new URLSearchParams({ /*Used to direct to callback and load token */

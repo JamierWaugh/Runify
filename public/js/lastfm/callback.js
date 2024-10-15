@@ -1,8 +1,8 @@
-import {lkey} from "../../keys.js"
+import {lkey} from "../../../keys.js"
 
 import {songsCall} from "./listen_data.js"
 
-import {reviewTracks} from "./review_tracks.js"
+import {reviewTracks} from "../strava/review_tracks.js"
 
 songsCall(lkey.api_key,1726401498,1726402675)
     .then((bySecond)=>{
