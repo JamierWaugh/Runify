@@ -1,4 +1,4 @@
-function readToken(){
+export function readToken(){
     const url = new URL(window.location.href); /*Reads token from url */
     console.log(url);
 

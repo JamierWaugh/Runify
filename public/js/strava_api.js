@@ -1,4 +1,4 @@
-import key from "../../keys.js";
+import {skey} from "../../keys.js";
 import {convertUnix} from "./unix_converter.js";
 /* Calls in keys from file */
 /* Calls in convertUnix function */
@@ -14,9 +14,6 @@ function getActivities(d){
             .then((res) => filterActivities(res)) /*Need to fix return on filterActivites*/
     activityData(accessT)
     getStreams(accessT)
-            
-
-    
 }
 
 /*Provides access key dynamically by using refresh token*/
@@ -28,9 +25,9 @@ function getAccess(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            client_id: key.clientId,
-            client_secret: key.clientSecret,
-            refresh_token: key.refreshToken,
+            client_id: skey.clientId,
+            client_secret: skey.clientSecret,
+            refresh_token: skey.refreshToken,
             grant_type: "refresh_token",
         })
     }).then((res) => res.json())
@@ -69,7 +66,7 @@ function activityData(accessT){
 }
 
 function getStreams(accessT){
-    let streams = "time,velocity_smooth,altitude,grade_smooth"
+    let streams = "time,velocity_smooth,grade_smooth"
     fetch(`https://www.strava.com/api/v3/activities/12415852967/streams?keys=${streams}&key_by_type=true`, {
         method:"GET",
         headers:{
