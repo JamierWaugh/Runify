@@ -1,10 +1,24 @@
 import {skey} from "../../../keys.js"
 
-export function authStrava(){
-    console.log(skey.clientId)
-    let cb = "http://127.0.0.1:5500/Projects/Runify/views/callback.html"
-    return window.location.href = `https://www.strava.com/oauth/authorize?client_id=${skey.clientId}&redirect_uri=${cb}&response_type=code&scope=activity:read_all`
-    
+import {readCode} from "../../../controllers/stravaCode.js"
+
+export function gen(){
+    let url = new URL(window.location.href);
+    if (url.searchParams.has("code")){
+        let code = readCode(url);
+        console.log(code)
+        fetch(`https://www.strava.com/oauth/token?client_id=${skey.clientId}&client_secret=${skey.clientSecret}&code=${code}&grant_type=authorization_code`, {method: "post"})
+            .then((response) => response.json())
+                .then(info =>{
+                        if (skey.refreshToken == ""){
+                            skey.refreshToken = info.refresh_token
+                        }
+                        console.log(info.refresh_token, "refresh_token")
+                    })
+    }
+    else {
+        console.log("Error")
+    }
 }
 
-window.authStrava = authStrava;
+window.gen = gen;

@@ -1,8 +1,8 @@
-export function readCode(){
-    const url = new URL(window.location.href); /*Reads token from url */
+export function readCode(url){
+    /*Reads token from url */
     console.log(url);
-
     const params = new URLSearchParams(url.search);
-    const token = params.get('code');
+    const code = params.get('code');
+    console.log(code)
     return code
 }
