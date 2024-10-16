@@ -3,7 +3,7 @@ function songsCall(api_key, start, end) {
     return fetch(call, {method: "get"})
         .then((response) => response.json())
             .then((data) => {
-                let trackList = data.recenttracks.track;
+                let trackList = data.recenttracks.track; /*Takes only the track data*/
                 console.log(trackList);
                 let bySecond = [];
                 for (let i = trackList.length-1; i >= 0; i--){ /*Loops through all tracks in order of listen time (first song in run first) */

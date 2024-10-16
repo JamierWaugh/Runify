@@ -1,2 +1,4 @@
 #Ignore private keys
 /keys.js
+
+/public/js/global/md5_script.js
