@@ -17,7 +17,7 @@ export function gen(){
                     })
     }
     else {
-        console.log("Error")
+        console.log("No code")
     }
 }
 
