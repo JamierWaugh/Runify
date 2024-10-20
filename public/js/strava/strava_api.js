@@ -1,5 +1,6 @@
-import {skey} from "../../../keys.js";
+import {skey, lkey} from "../../../keys.js";
 import {convertUnix} from "../global/unix_converter.js";
+import { compilingData } from "../lastfm/callback.js";
 /* Calls in keys from file */
 /* Calls in convertUnix function */
 const auth_link = "https://www.strava.com/oauth/token"
@@ -12,12 +13,12 @@ function getActivities(d){
     fetch(activities_link)
         .then((res) =>res.json())
             .then((res) => filterActivities(res)) /*Need to fix return on filterActivites*/
-    activityData(accessT)
+    //activityData(accessT)
     getStreams(accessT)
 }
 
 /*Provides access key dynamically by using refresh token*/
-function getAccess(){
+export function getAccess(){
     fetch(auth_link,{
         method: "post",
         headers: {
@@ -34,6 +35,8 @@ function getAccess(){
         .then(data => getActivities(data))
 }
 
+window.getAccess = getAccess;
+
 /*Filters activities to only include runs - this could be broadend as app is developed */
 function filterActivities(res){
     let time = []
@@ -47,8 +50,8 @@ function filterActivities(res){
             time.push({id: res[i].id, start_time: convertUnix(res[i].start_date), duration: res[i].elapsed_time})
         }
     }
-    console.log(res)
-    console.log(time)
+    //console.log(res)
+    //console.log(time)
     
     return res
 }
@@ -67,14 +70,18 @@ function activityData(accessT){
 
 function getStreams(accessT){
     let streams = "time,velocity_smooth,grade_smooth"
-    fetch(`https://www.strava.com/api/v3/activities/12415852967/streams?keys=${streams}&key_by_type=true`, {
+    fetch(`https://www.strava.com/api/v3/activities/12415852967/streams?keys=${streams}&key_by_type=true&resolution=low`, {
         method:"GET",
         headers:{
             "Authorization": `Bearer ${accessT}`
         },
     })
     .then((response) => response.json())
-        .then((data) => console.log(data))
+        .then((points) => {
+            compilingData(points)
+            //Calculate average pace for each song
+                
+        })
 
 }
 
@@ -101,11 +108,11 @@ function getSplits(data){ /*Converting split data into time stamp for music stat
     
     console.log(highest_GAP.time)
     console.log(highest_GAP.GAP)
+    compilingData(highest_GAP)
+
+    
+
 }
-
-getAccess()
-
-getActivities()
 
 
 

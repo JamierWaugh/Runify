@@ -1,4 +1,4 @@
-import {skey} from "../../../keys.js"
+import {skey, lkey} from "../../../keys.js"
 
 import {readCode} from "../../../controllers/stravaCode.js"
 
@@ -12,7 +12,7 @@ export function gen(){
                 .then(info =>{
                         if (skey.refreshToken == ""){
                             skey.refreshToken = info.refresh_token
-                        }
+                        } //This code does nothing as it can't edit another file
                         console.log(info.refresh_token, "refresh_token")
                     })
     }

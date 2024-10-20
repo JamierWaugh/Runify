@@ -27,8 +27,14 @@ export function loadStatic(token_passed){
                 const session = data.session
                 console.log(session)
                 console.log(session.key, "session") /* outputs lifetime session key */
-                const session_key = session.key
-                return {sessionKey: session_key, userId: session.name}
+                const session_key = session.key;
+                if (lkey.session_token == ""){
+                    lkey.session_token = session_key;
+                }
+                if (lkey.user_name ==""){
+                    lkey.user_name = session.name
+                    console.log("no-name")
+                }
             })
     
     
