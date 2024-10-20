@@ -70,7 +70,7 @@ function activityData(accessT){
 
 function getStreams(accessT){
     let streams = "time,velocity_smooth,grade_smooth"
-    fetch(`https://www.strava.com/api/v3/activities/12415852967/streams?keys=${streams}&key_by_type=true&resolution=low`, {
+    fetch(`https://www.strava.com/api/v3/activities/12415852967/streams?keys=${streams}&key_by_type=true&resolution=high`, {
         method:"GET",
         headers:{
             "Authorization": `Bearer ${accessT}`
