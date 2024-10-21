@@ -1,31 +1,33 @@
 function reviewTracks(trackData, runData){
-    console.log(trackData, "track data");
-    console.log(runData, "run data");
     let top3 = [{average_pace:0},{average_pace:0},{average_pace:0}]; //Creates array with average pace 0 for sorting
     let sum = 0;
     let count = 0;
     let averagePace;
-    
-    for (let t = 0; t< trackData.length -1; t++){
-        for (let i = 0; i<runData.time.data.length; i++){
-            if ((runData.time.data[i] >= trackData[t].timeStart)){ //&& (runData.time.data[i] <= (trackData[t].timeStart + trackData[t].duration))){
+    let t = 0;
+    for (let i = trackData[0].timeStart; i<runData.time.data.length; i++){ //Only loop through run length
+            if ((runData.time.data[i] > trackData[t].timeStart) && (runData.time.data[i] < (trackData[t].timeStart + trackData[t].duration))){ //Increment t if outside of t'\s bounds
                 sum = runData.velocity_smooth.data[i] + sum
                 count = count + 1
-
+                } // Now much more optimised , previously trackLength * runLength * 3 now just runLength*3. O(3N)
+            else{
+                averagePace = sum /count; 
+                trackData[t].average_pace = averagePace; //Appends average GAP onto the song data
+                sum = 0;
+                count = 0; //Resets variables after each pass through
+                
+                let changed = false;
+                for (let r = 0; r<top3.length; r++){ //Filters fastest songs into top 3.
+                    if(top3[r].average_pace < trackData[t].average_pace & changed == false){
+                        top3[r]=trackData[t]
+                        changed = true;
+                    }
+                }
+                
+                t = t+1
             }
-            } //Currently O(N^2), would prefer O(N)
-        averagePace = sum /count; 
-        trackData[t].average_pace = averagePace; //Appends average GAP onto the song data
-        sum = 0;
-        count = 0; //Resets variables after each pass through
+        
 
-        let changed = false;
-        for (let r = 0; r<top3.length; r++){ //Filters fastest songs into top 3.
-            if(top3[r].average_pace < trackData[t].average_pace & changed == false){
-                top3[r]=trackData[t]
-                changed = true;
-            }
-        }
+        
     }
     console.log(top3)
     let firstString = `${top3[0].songName} by ${top3[0].artistName} running at ${top3[0].average_pace.toFixed(4)} kph (grade adjusted).`
@@ -39,7 +41,7 @@ function reviewTracks(trackData, runData){
     createImg(0, top3)
     createImg(1, top3)
     createImg(2, top3)
-    return top3
+    
 }
 export {reviewTracks}
 
