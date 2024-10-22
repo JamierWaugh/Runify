@@ -1,9 +1,12 @@
-function reviewTracks(trackData, runData){
+function reviewTracks(trackData, runDataParsed){
+    console.log(trackData, "trackdata") //Currently passing an empty array when no songs are listened, this outputs empty values and causes erros
+    let runData = runDataParsed.data
     let top3 = [{average_pace:0},{average_pace:0},{average_pace:0}]; //Creates array with average pace 0 for sorting
     let sum = 0;
     let count = 0;
     let averagePace;
     let t = 0;
+    if (trackData.length !== 0){
     for (let i = trackData[0].timeStart; i<runData.time.data.length; i++){ //Only loop through run length
             if ((runData.time.data[i] > trackData[t].timeStart) && (runData.time.data[i] < (trackData[t].timeStart + trackData[t].duration))){ //Increment t if outside of t'\s bounds
                 sum = runData.velocity_smooth.data[i] + sum
@@ -25,11 +28,11 @@ function reviewTracks(trackData, runData){
                 
                 t = t+1
             }
-        
+    }
 
         
     }
-    console.log(top3)
+    console.log(top3, "top3")
     let firstString = `${top3[0].songName} by ${top3[0].artistName} running at ${top3[0].average_pace.toFixed(4)} kph (grade adjusted).`
     let secondString = `${top3[1].songName} by ${top3[1].artistName} running at ${top3[1].average_pace.toFixed(4)} kph (grade adjusted).`
     let thirdString = `${top3[2].songName} by ${top3[2].artistName} running at ${top3[2].average_pace.toFixed(4)} kph (grade adjusted).`

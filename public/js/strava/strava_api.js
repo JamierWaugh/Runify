@@ -12,9 +12,12 @@ function getActivities(d){
     const activities_link = `https://www.strava.com/api/v3/athlete/activities?access_token=${accessT}`
     fetch(activities_link)
         .then((res) =>res.json())
-            .then((res) => filterActivities(res)) /*Need to fix return on filterActivites*/
-    //activityData(accessT)
-    getStreams(accessT)
+            .then((res) => filterActivities(res)) // Not returning the run data i'd like (time)
+                .then((res) => {
+                    getStreamsAll(accessT,res)})
+                
+    
+        //getStreams(accessT)
 }
 
 /*Provides access key dynamically by using refresh token*/
@@ -50,10 +53,8 @@ function filterActivities(res){
             time.push({id: res[i].id, start_time: convertUnix(res[i].start_date), duration: res[i].elapsed_time})
         }
     }
-    //console.log(res)
-    //console.log(time)
     
-    return res
+    return time
 }
 
 function activityData(accessT){
@@ -84,6 +85,37 @@ function getStreams(accessT){
         })
 
 }
+
+function getStreamsAll(accessT, runData){
+    let fetchPromises = [];
+    for (let d = 0; d < 3; d++){ //For the last 3 runs...
+        
+        let streams = "time,velocity_smooth,grade_smooth"
+        //let fetchPromise is key as fetch result is returned
+        let fetchPromise = fetch(`https://www.strava.com/api/v3/activities/${runData[d].id}/streams?keys=${streams}&key_by_type=true&resolution=high`, {
+            method:"GET",
+            headers:{
+            "Authorization": `Bearer ${accessT}`
+            },
+    })  
+        .then((response) => response.json())
+            .then((points) => {
+                return {data: points, start: runData[d].start_time, end: runData[d].start_time + runData[d].duration} //append to hold last 3 runs data inside variable fetchPromise    
+                }
+            )
+            .catch((error => {
+                console.error("Error fetching activities", fetchPromises) //catch promise error
+            }))
+    fetchPromises.push(fetchPromise) // appends fetch result to fetch promises array
+    }
+    Promise.all(fetchPromises) //once all promises returned
+        .then((data)=> {
+                for (let i = 0; i < 3; i++){
+                    compilingData(data[i])
+                } //Compile data for last 3
+            })
+}
+
 
 function getSplits(data){ /*Converting split data into time stamp for music stats */
     console.log(data)
