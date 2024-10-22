@@ -6,6 +6,7 @@ function reviewTracks(trackData, runDataParsed, c){
     let count = 0;
     let averagePace;
     let t = 0;
+    let presentData = true;
     if (trackData.length !== 0){
     for (let i = trackData[0].timeStart; i<runData.time.data.length; i++){ //Only loop through run length
             if ((runData.time.data[i] > trackData[t].timeStart) && (runData.time.data[i] < (trackData[t].timeStart + trackData[t].duration))){ //Increment t if outside of t'\s bounds
@@ -29,6 +30,7 @@ function reviewTracks(trackData, runDataParsed, c){
                 t = t+1
             }
     }
+        
     console.log(top3, "top3")
     let firstString = `${top3[0].songName} by ${top3[0].artistName} running at ${mphConvert(top3[0].average_pace).toFixed(4)} mph average pace.`
     let secondString = `${top3[1].songName} by ${top3[1].artistName} running at ${mphConvert(top3[1].average_pace).toFixed(4)} mph average pace.`
@@ -43,7 +45,10 @@ function reviewTracks(trackData, runDataParsed, c){
     createImg(2, top3,c)
         
     }
-    
+    else{
+        presentData = false
+    }
+    changeTitle(presentData, c)
 }
 export {reviewTracks}
 
@@ -62,11 +67,17 @@ function createImg(index, top3,c){
     imgElement.height = 100;
 
     // Append the image to the desired element
-    console.log(`album${index}${c}`)
     document.getElementById(`album${index}${c}`).appendChild(imgElement);
     
 
     }
+
+function changeTitle(presentData, c){
+    document.getElementById(`title${c}`).innerHTML=`Run ${c+1}`
+    if (presentData == false){
+        document.getElementById(`first${c}`).innerHTML="No music data present"
+    }
+}
 
 function mphConvert(ms){ //conversion from m/s to mph
     return ms*2.23694
