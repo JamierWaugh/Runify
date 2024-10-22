@@ -111,7 +111,7 @@ function getStreamsAll(accessT, runData){
     Promise.all(fetchPromises) //once all promises returned
         .then((data)=> {
                 for (let i = 0; i < 3; i++){
-                    compilingData(data[i])
+                    compilingData(data[i],i)
                 } //Compile data for last 3
             })
 }
