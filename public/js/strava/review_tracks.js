@@ -21,11 +21,11 @@ function reviewTracks(trackData, runDataParsed, c){
                 sum = 0;
                 count = 0; //Resets variables after each pass through
                 
-                for (let r = 0; r< top3.length; r++){ //Filters fastest songs into top 3. //Not functioning correctly just choses last 3
+                for (let r = 2; r>= 0 ; r--){ //Starts at the slowest and then sorts upwards.
                     if(top3[r].average_pace < averagePace ){
                         top3[r]=trackData[t]
                         // After replacing, sort top3 to ensure the fastest songs stay in the array
-                        top3.sort((a, b) => a.average_pace - b.average_pace);
+                        top3.sort((a, b) => b.average_pace - a.average_pace);
                         //Break loop as song is added
                         break;
                         
@@ -37,7 +37,6 @@ function reviewTracks(trackData, runDataParsed, c){
     }
         
     console.log(top3, "top3")
-    top3 = top3.reverse() //songs are the wrong way round
     let firstString = `${top3[0].songName} by ${top3[0].artistName} running at ${mphConvert(top3[0].average_pace).toFixed(4)} mph average pace.`
     let secondString = `${top3[1].songName} by ${top3[1].artistName} running at ${mphConvert(top3[1].average_pace).toFixed(4)} mph average pace.`
     let thirdString = `${top3[2].songName} by ${top3[2].artistName} running at ${mphConvert(top3[2].average_pace).toFixed(4)} mph average pace.`
