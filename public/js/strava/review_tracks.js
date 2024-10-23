@@ -2,6 +2,7 @@ function reviewTracks(trackData, runDataParsed, c){
     console.log(trackData, "trackdata") //Currently passing an empty array when no songs are listened, this outputs empty values and causes erros
     let runData = runDataParsed.data
     let top3 = [{average_pace:0},{average_pace:0},{average_pace:0}]; //Creates array with average pace 0 for sorting
+    console.log(top3, "start")
     let sum = 0;
     let count = 0;
     let averagePace;
@@ -14,16 +15,20 @@ function reviewTracks(trackData, runDataParsed, c){
                 count = count + 1
                 } // Now much more optimised , previously trackLength * runLength * 3 now just runLength*3. O(3N)
             else{
+                
                 averagePace = sum /count; 
                 trackData[t].average_pace = averagePace; //Appends average GAP onto the song data
                 sum = 0;
                 count = 0; //Resets variables after each pass through
                 
-                let changed = false;
-                for (let r = 0; r<top3.length; r++){ //Filters fastest songs into top 3.
-                    if(top3[r].average_pace < trackData[t].average_pace & changed == false){
+                for (let r = 0; r< top3.length; r++){ //Filters fastest songs into top 3. //Not functioning correctly just choses last 3
+                    if(top3[r].average_pace < averagePace ){
                         top3[r]=trackData[t]
-                        changed = true;
+                        // After replacing, sort top3 to ensure the fastest songs stay in the array
+                        top3.sort((a, b) => a.average_pace - b.average_pace);
+                        //Break loop as song is added
+                        break;
+                        
                     }
                 }
                 
@@ -32,6 +37,7 @@ function reviewTracks(trackData, runDataParsed, c){
     }
         
     console.log(top3, "top3")
+    top3 = top3.reverse() //songs are the wrong way round
     let firstString = `${top3[0].songName} by ${top3[0].artistName} running at ${mphConvert(top3[0].average_pace).toFixed(4)} mph average pace.`
     let secondString = `${top3[1].songName} by ${top3[1].artistName} running at ${mphConvert(top3[1].average_pace).toFixed(4)} mph average pace.`
     let thirdString = `${top3[2].songName} by ${top3[2].artistName} running at ${mphConvert(top3[2].average_pace).toFixed(4)} mph average pace.`

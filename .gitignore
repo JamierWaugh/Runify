@@ -1,4 +1,4 @@
 #Ignore private keys
 /keys.js
-
+/.env
 /public/js/global/md5_script.js
