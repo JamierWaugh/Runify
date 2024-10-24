@@ -44,7 +44,7 @@ window.getAccess = getAccess;
 function filterActivities(res){
     let time = []
     for (let i = 0; i < res.length; i++){
-        if (res[i].type != "Run" || res[i].moving_time < 675){ //average song length ~ 3:45, or 225 * 3 seconds. Helps with issues on shorter runs / long songs
+        if (res[i].type != "Run" ){
             res.splice(i,1)
             
             
